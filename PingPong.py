@@ -50,6 +50,10 @@ class Ball:
         self.velocity_x = self.speed * math.cos(angle * math.pi / 180)
         self.velocity_y = self.speed * math.sin(angle * math.pi / 180)
 
+    def get_direction(self):
+        return [self.velocity_x, self.velocity_y]
+        
+
 
 # In[409]:
 
@@ -108,7 +112,7 @@ class Agent():
 
 # Функция получения текущей ситуации на игровом поле
 def get_obs(cart_1, cart_2, ball):
-    return (cart_1.position, cart_2.position, ball.position, ball.direction)
+    return (cart_1.position, cart_2.position, ball.position, ball.get_direction)
 
 
 # In[412]:
