@@ -4,7 +4,7 @@ import pygame
 class Cart:
     def __init__(self, surface, position):
         self._velocity = 5
-        self._size = [10, 50]
+        self._size = [5, 50]
         self._position = position
         self._surface = surface
         self._color = (0, 255, 0)

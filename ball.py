@@ -5,7 +5,7 @@ import pygame
 
 class Ball:
     def __init__(self, surface, position):
-        self._radius = 20
+        self._radius = 2
         self._surface = surface
         self._position = position
         self._speed = 4
