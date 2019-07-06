@@ -1,7 +1,7 @@
-from agent import Agent
+from Game.agent import Agent
 import pygame
-from ping_pong import PingPong
-import constants
+from Game.ping_pong import PingPong
+from Game import constants
 
 ping_pong = PingPong()
 

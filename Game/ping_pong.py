@@ -1,7 +1,7 @@
 import pygame
-from ball import Ball
-from cart import Cart
-import constants
+from Game.ball import Ball
+from Game.cart import Cart
+from Game import constants
 
 
 class PingPong:
@@ -26,9 +26,6 @@ class PingPong:
                self._ball.get_position(), \
                self._ball.get_direction()
 
-    def auto_move(self):
-        self._cart_1.get_position()[1] = self._ball.get_position()[1] - self._ball.get_radius()
-
     def is_end_game(self):
         return not (0 < self._ball.get_position()[0] < self._window_size[0])
 
@@ -44,17 +41,17 @@ class PingPong:
                 action_2 != constants.MOVE_DOWN and action_2 != constants.MOVE_UP:
             return
         if action_1 == constants.MOVE_DOWN:
-            if self._cart_1.get_position()[1] > 0:
+            if self._cart_1.get_position()[1] <= self._window_size[1] - self._cart_1.get_size()[1]:
                 self._cart_1.move_down()
         elif action_1 == constants.MOVE_UP:
-            if self._cart_1.get_position()[1] <= self._window_size[1] - self._cart_1.get_size()[1]:
+            if self._cart_1.get_position()[1] > 0:
                 self._cart_1.move_up()
 
         if action_2 == constants.MOVE_DOWN:
-            if self._cart_2.get_position()[1] > 0:
+            if self._cart_2.get_position()[1] <= self._window_size[1] - self._cart_2.get_size()[1]:
                 self._cart_2.move_down()
         elif action_2 == constants.MOVE_UP:
-            if self._cart_2.get_position()[1] <= self._window_size[1] - self._cart_2.get_size()[1]:
+            if self._cart_2.get_position()[1] > 0:
                 self._cart_2.move_up()
 
     def game_step(self, action_1, action_2):

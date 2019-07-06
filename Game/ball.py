@@ -2,7 +2,7 @@ import math
 import random
 import pygame
 
-import constants
+from Game import constants
 
 
 class Ball:
