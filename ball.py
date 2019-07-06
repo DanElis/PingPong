@@ -2,20 +2,22 @@ import math
 import random
 import pygame
 
+import constants
+
 
 class Ball:
     def __init__(self, surface, position):
-        self._radius = 2
+        self._radius = constants.RADIUS_BALL
         self._surface = surface
         self._position = position
-        self._speed = 4
+        self._speed = constants.BALL_SPEED
 
         angle = random.randint(-45, 45) + random.randint(0, 1) * 180
 
         self._velocity_x = self._speed * math.cos(angle * math.pi / 180)
         self._velocity_y = self._speed * math.sin(angle * math.pi / 180)
 
-        self._color = (255, 0, 0)  # Красный
+        self._color = constants.RED
 
     def draw(self):
         pygame.draw.circle(self._surface,

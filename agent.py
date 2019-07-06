@@ -1,6 +1,5 @@
 class Agent:
-    def __init__(self, actions, policy):
-        self._actions = actions
+    def __init__(self, policy):
         self._policy = policy
 
     def get_action(self, state):
