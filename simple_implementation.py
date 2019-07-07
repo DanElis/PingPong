@@ -3,7 +3,7 @@ import pygame
 from Game.ping_pong import PingPong
 from Game import constants
 
-ping_pong = PingPong()
+ping_pong = PingPong(visible=True)
 
 
 def policy_gamers(state):
@@ -35,8 +35,8 @@ while True:
     action_2 = constants.NOTHING
     while action_1 != constants.END_GAME:
         action_1, action_2 = agent_1.get_action(None)
-        reward = ping_pong.game_step(action_1, action_2)
-        if reward[0]:
+        new_s, r, is_end_game = ping_pong.game_step(action_1, action_2)
+        if is_end_game:
             ping_pong.reset()
 
 

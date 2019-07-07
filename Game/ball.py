@@ -8,7 +8,8 @@ from Game import constants
 class Ball:
     def __init__(self, surface, position):
         self._radius = constants.RADIUS_BALL
-        self._surface = surface
+        if surface is not None:
+            self._surface = surface
         self._position = position
         self._speed = constants.BALL_SPEED
 
@@ -58,3 +59,9 @@ class Ball:
     def step(self):
         self._position[0] += self._velocity_x
         self._position[1] += self._velocity_y
+
+    def get_speed(self):
+        return self._speed
+
+    def set_speed(self, new_speed):
+        self._speed = new_speed

@@ -7,7 +7,8 @@ class Cart:
         self._velocity = constants.VELOCITY_CART
         self._size = [constants.WIDTH_CART, constants.HEIGHT_CART]
         self._position = position
-        self._surface = surface
+        if surface is not None:
+            self._surface = surface
         self._color = constants.BLUE
 
     def draw(self):

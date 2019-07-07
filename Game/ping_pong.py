@@ -1,15 +1,21 @@
 import pygame
+import numpy as np
 from Game.ball import Ball
 from Game.cart import Cart
 from Game import constants
 
 
 class PingPong:
-    def __init__(self):
+    def __init__(self, visible=True):
+        self._visible = visible
         pygame.init()
+        self._r1 = 0
+        self._r2 = 0
         self._window_size = constants.WIDTH_WINDOW, constants.HEIGHT_WINDOW
-        self._window = pygame.display.set_mode(self._window_size)
-        pygame.display.set_caption('Ping Pong')
+        self._window = None
+        if self._visible:
+            self._window = pygame.display.set_mode(self._window_size)
+            pygame.display.set_caption('Ping Pong')
         self._cart_1 = Cart(self._window, [0, constants.HEIGHT_WINDOW / 2])
         self._cart_2 = Cart(self._window, [constants.WIDTH_WINDOW - constants.WIDTH_CART, constants.HEIGHT_WINDOW / 2])
         self._ball = Ball(self._window, [constants.WIDTH_WINDOW / 2, constants.HEIGHT_WINDOW / 2])
@@ -18,13 +24,28 @@ class PingPong:
         self._cart_1 = Cart(self._window, [0, constants.HEIGHT_WINDOW / 2])
         self._cart_2 = Cart(self._window, [constants.WIDTH_WINDOW - constants.WIDTH_CART, constants.HEIGHT_WINDOW / 2])
         self._ball = Ball(self._window, [constants.WIDTH_WINDOW / 2, constants.HEIGHT_WINDOW / 2])
+        return self.get_reward()
 
     def get_reward(self):
-        return self.is_end_game(), \
-               self._cart_1.get_position(), \
-               self._cart_2.get_position(), \
-               self._ball.get_position(), \
-               self._ball.get_direction()
+        if self.is_end_game():
+            if self._ball.get_position()[0] <= 0:
+                self._r1 += constants.LOSE_GAME
+                self._r2 += constants.WIN_GAME
+            elif self._ball.get_position()[0] >= self._window_size[0]:
+                self._r1 += constants.LOSE_GAME
+                self._r2 += constants.WIN_GAME
+        self._r1 -= self._distance_from_ball(self._cart_1.get_position()[1])
+        self._r2 -= self._distance_from_ball(self._cart_2.get_position()[1])
+        return [*np.divide(self._cart_1.get_position(), self._window_size),
+                *np.divide(self._cart_2.get_position(), self._window_size),
+                *np.divide(self._ball.get_position(), self._window_size),
+                self._ball.get_velocity()['y'] / (2 * self._ball.get_speed()) + 0.5,
+                self._ball.get_velocity()['y'] / (2 * self._ball.get_speed()) + 0.5], \
+               (self._r1, self._r2), \
+               self.is_end_game()
+
+    def _distance_from_ball(self, cart_position_y):
+        return abs(cart_position_y - self._ball.get_position()[1])
 
     def is_end_game(self):
         return not (0 < self._ball.get_position()[0] < self._window_size[0])
@@ -56,10 +77,15 @@ class PingPong:
 
     def game_step(self, action_1, action_2):
 
+        self._r1 = 0
+        self._r2 = 0
+
         if self._is_cart_1_touch():
+            self._r1 += constants.REPEL
             self._reflection('x')
 
         if self._is_cart_2_touch():
+            self._r2 += constants.REPEL
             self._reflection('x')
 
         if self._is_wall_touch():
@@ -69,7 +95,8 @@ class PingPong:
 
         self.perform_actions(action_1, action_2)
 
-        self.redraw()
+        if self._visible:
+            self.redraw()
         return self.get_reward()
 
     def _is_cart_1_touch(self):
@@ -100,3 +127,8 @@ class PingPong:
         elif direction == 'y':
             self._ball.set_velocity_y(-1 * self._ball.get_velocity()['y'])
 
+    def quit(self):
+        pygame.quit()
+
+    def set_visible(self, visible):
+        self._visible = visible
